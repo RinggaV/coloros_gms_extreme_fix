@@ -3,6 +3,15 @@ ColorOS GMS Extreme Fix (终极修复方案)
 
 🌟 模块简介
 ColorOS 的后台管理系统（ELSA/OFreezer）对 GMS 极其不友好，即便放开自启动也难逃被冷冻或断连的命运。本模块通过直接修改系统核心策略文件 sys_elsa_config_list.xml，配合系统框架参数注入，实现 GMS 推送的秒级触达。
+
+📝 本仓库改动说明
+基于原仓库进行了以下修改：
+- 改用备份+直接替换方案替代 mount --bind 挂载，避免重启后失效
+- 添加 uninstall.sh，卸载模块时自动恢复备份文件
+- 清除上游残留引用，独立维护
+
+原仓库：[Artifical0/coloros_gms_extreme_fix](https://github.com/Artifical0/coloros_gms_extreme_fix)（原始上游：[CHIZI-0618/coloros_gms_extreme_fix](https://github.com/CHIZI-0618/coloros_gms_extreme_fix)）
+
 🚀 核心功能
 GMS 深度豁免：将 Google 服务框架（GMS/GSF）移出系统清理黑名单，并注入 bigDataCfg 的最高优先级白名单。
 
@@ -15,7 +24,6 @@ ELSA/OFreezer 破解：彻底放开 GMS 的后台掩码（Mask）限制，禁用
 🛠 技术原理
 备份替换：开机后备份原文件，将修改后的 sys_elsa_config_list.xml 直接拷贝到 /data/oplus/os/bpm/ 并锁定防止恢复。
 
-
 📥 安装说明
 确保设备已获取 KernelSU 或 Magisk 权限。
 
@@ -24,6 +32,9 @@ ELSA/OFreezer 破解：彻底放开 GMS 的后台掩码（Mask）限制，禁用
 在管理器中刷入并重启。
 
 重启后建议在终端运行 settings get secure google_restric_info 确认是否为 0。
+
+💡 排查建议
+如果刷入模块后推送仍不生效，建议安装 [FCM Fix](https://github.com/JohnyLiSW/FCM-Fix) 模块，排查是否安装了多个 hosts 管理模块导致 FCM hosts 冲突。
 
 ⚠️ 免责声明
 本模块涉及对系统底层功耗策略的深度修改，虽然在 OnePlus 15 上测试通过，但不同机型可能存在差异。刷入前请务必做好数据备份，如遇系统卡顿或掉电异常，请及时卸载模块。
