@@ -2,6 +2,8 @@
 # 定义模块路径
 MODDIR=${0%/*}
 TARGET_FILE="/data/oplus/os/bpm/sys_elsa_config_list.xml"
+BACKUP_FILE="$MODDIR/sys_elsa_config_list.xml.bak"
+SOURCE_FILE="$MODDIR/data/oplus/os/bpm/sys_elsa_config_list.xml"
 
 # 等待系统完全启动
 while [ "$(getprop sys.boot_completed)" != "1" ]; do
@@ -12,14 +14,20 @@ done
 # 这个命令能清空 HansPackageManager 中的 GMS 限制名单
 settings put secure google_restric_info 0
 
-# --- [优化] 2. 针对 BPM 目录的强制锁定挂载 ---
-if [ -f "$MODDIR/data/oplus/os/bpm/sys_elsa_config_list.xml" ]; then
-    # 挂载前先解除可能存在的 i 属性锁定
+# --- [优化] 2. 针对 BPM 配置文件的备份与替换 ---
+if [ -f "$SOURCE_FILE" ]; then
+    # 解除可能存在的 i 属性锁定
     chattr -i "$TARGET_FILE"
-    
-    # 执行绑定挂载
-    mount --bind "$MODDIR/data/oplus/os/bpm/sys_elsa_config_list.xml" "$TARGET_FILE"
 
+    # 仅在尚未备份时执行备份（避免每次开机重复覆盖备份）
+    if [ ! -f "$BACKUP_FILE" ]; then
+        cp "$TARGET_FILE" "$BACKUP_FILE"
+        chattr +i "$BACKUP_FILE"
+    fi
+
+    # 直接拷贝替换目标文件
+    cp "$SOURCE_FILE" "$TARGET_FILE"
+    chattr +i "$TARGET_FILE"
 fi
 
 # --- [新增] 3. 注入安卓原生 Doze (打盹) 白名单 ---
