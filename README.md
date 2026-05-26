@@ -3,7 +3,6 @@ ColorOS GMS Extreme Fix (终极修复方案)
 
 🌟 模块简介
 ColorOS 的后台管理系统（ELSA/OFreezer）对 GMS 极其不友好，即便放开自启动也难逃被冷冻或断连的命运。本模块通过直接修改系统核心策略文件 sys_elsa_config_list.xml，配合系统框架参数注入，实现 GMS 推送的秒级触达。
-合并 Google拦截规则清理 https://github.com/CHIZI-0618/ColorOS-Google-Firewall-Fixer
 🚀 核心功能
 GMS 深度豁免：将 Google 服务框架（GMS/GSF）移出系统清理黑名单，并注入 bigDataCfg 的最高优先级白名单。
 
@@ -14,7 +13,7 @@ ELSA/OFreezer 破解：彻底放开 GMS 的后台掩码（Mask）限制，禁用
 社交软件调优（可选压制）：精准移除微信、QQ 的 CPU 调度白名单，强制其在后台进入缓存状态(无效)。
 
 🛠 技术原理
-挂载重定向：通过 KernelSU/Magisk 将修改后的 sys_elsa_config_list.xml 绑定挂载到 /data/oplus/os/bpm/。
+备份替换：开机后备份原文件，将修改后的 sys_elsa_config_list.xml 直接拷贝到 /data/oplus/os/bpm/ 并锁定防止恢复。
 
 
 📥 安装说明
